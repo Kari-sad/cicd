@@ -33,15 +33,16 @@ pipeline {
 			stage('Pushing image to Amazon ECR'){
 				steps {
 					script {
-						docker.withRegistry( '', REGISTRY_CREDENTIAL ) {
+						withDockerRegistry(credentialsId: 'ecr:us-east-1:$REGISTRY_CREDENTIAL', url: '$ECR_HUB_REPO') {
 							sh 'docker push $ECR_HUB_REPO:$BUILD_NUMBER'
 							sh 'docker push $ECR_HUB_REPO:latest'
 						}
-						
-						echo "Image pushed to repository"
+						echo "Image pushed to ECR repository"
 					}
 				}
 			}
 		}
 	}
+	
+	
 
