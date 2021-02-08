@@ -1,34 +1,46 @@
 pipeline {
 		agent any
 		environment {
-            /* repository in Dockerhub */        
-			DOCKER_HUB_REPO = "karinegh18/casestudy"
+            /* repository in ECR */        
+			ECR_HUB_REPO = "public.ecr.aws/m8h9o2j8/flask"
 			/* this should be configured in jenkins manage credentials */
-			//REGISTRY_CREDENTIAL = "dockerhub"
+			REGISTRY_CREDENTIAL = "ecr-credential"
 		}
 		stages {
 			stage('Clean workspace'){
 				steps{
 					script{
-						sh 'rm -rf $PWD/cicd'						
+						cleanWs()						
 					}
 				}
 			}
 			stage('Cloning our Git'){
 				steps {
 					script{
-						sh 'git clone https://github.com/Kari-sad/cicd.git' 
+						git 'https://github.com/Kari-sad/cicd.git' 
 					}		
 				}
 			}
 			stage('Building new image ') {
 				steps {
 					script {
-						sh 'docker image build -t $DOCKER_HUB_REPO:latest .'
-						sh 'docker image tag $DOCKER_HUB_REPO:latest $DOCKER_HUB_REPO:$BUILD_NUMBER'
+						sh 'docker image build -t $ECR_HUB_REPO:latest .'
+						sh 'docker image tag $ECR_HUB_REPO:latest $ECR_HUB_REPO:$BUILD_NUMBER'
 						echo "image buit successfuly"
 					}
 				}	
+			}
+			stage('Pushing image to Amazon ECR'){
+				steps {
+					script {
+						docker.withRegistry( '', REGISTRY_CREDENTIAL ) {
+							sh 'docker push $ECR_HUB_REPO:$BUILD_NUMBER'
+							sh 'docker push $ECR_HUB_REPO:latest'
+						}
+						
+						echo "Image pushed to repository"
+					}
+				}
 			}
 		}
 	}
