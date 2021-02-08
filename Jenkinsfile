@@ -41,7 +41,15 @@ pipeline {
 					}
 				}
 			}
-		}
+			//stage('delete local docker image') {
+			//	steps {
+			//		script {
+						// make sure that the Docker image is removed
+			//			sh "docker rmi $ECR_HUB_REPO:latest"
+			//		}
+			//	}
+			//}
+		}	
 	}
 	
 	
