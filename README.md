@@ -31,10 +31,6 @@ ssh to ec2 instance
 In order to help Jenkins( or any Java based application) to point to the JVM (Java Virtual Machine) properly, we are required to set JAVA_HOME environment variable.
 
 **Set JAVA_HOME:**  
-
-` whereis javac    `   (javac: /usr/bin/javac /usr/share/man/man1/javac.1.gz) 
-
- `whereis java`        (java: /usr/bin/java /usr/share/java /usr/share/man/man1/java.1.gz)  
  
 - Edit .bashrc and add these lines at the end
 
